@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { generate } from "./api/chat/route";
+import { generate } from "./api/chat/actions";
 import { readStreamableValue } from "ai/rsc";
 
 export default function Chat() {
