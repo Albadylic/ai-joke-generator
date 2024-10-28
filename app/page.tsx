@@ -114,7 +114,7 @@ export default function Chat() {
             Generate Joke
           </button>
 
-          <div className="bg-opacity-25 bg-gray-700 rounded-lg p-4">
+          <div className="bg-opacity-25 bg-gray-700 rounded-lg p-4 max-w-2xl">
             {generation}
           </div>
         </div>
