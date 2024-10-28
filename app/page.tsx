@@ -4,6 +4,9 @@ import { useState } from "react";
 import { generate } from "./api/chat/actions";
 import { readStreamableValue } from "ai/rsc";
 
+export const runtime = "edge";
+export const preferredRegion = "home";
+
 export default function Chat() {
   const [generation, setGeneration] = useState<string>("");
 
