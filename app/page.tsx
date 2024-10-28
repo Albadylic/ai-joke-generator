@@ -34,14 +34,14 @@ export default function Chat() {
   };
 
   return (
-    <main className="mx-auto w-full h-full p-24 flex flex-col bg-slate-700">
+    <main className="mx-auto w-full  p-24 flex flex-col bg-slate-700">
       <div className="p4 m-4">
         <div className="flex flex-col items-center justify-center space-y-8 text-white">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold">Story Telling App</h2>
-            <p className="text-zinc-500 dark:text-zinc-400">
-              Customize the joke by selecting the genre and tone.
-            </p>
+          <div className="space-y-4 bg-opacity-25 bg-gray-200 rounded-lg p-4">
+            <h2 className="text-3xl font-bold">
+              🤣🤣 Funniest Joke App of All Time 🤣🤣
+            </h2>
+            <p>Customize the joke by selecting the genre and tone below.</p>
           </div>
 
           <div className="space-y-4 bg-opacity-25 bg-gray-200 rounded-lg p-4">
