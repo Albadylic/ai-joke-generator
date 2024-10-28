@@ -13,3 +13,16 @@ I followed guidance on Vercel's documentation to implement [streamText()](https:
 Overall this was a satisying learning opportunity, especially since I haven't used Next before (only React).
 
 The site allows a user to pick a genre and type of humour. The agent will respond with a joke fitting these conditions. However, they're cynical about the future of stand-up comedy and will make it known that they think it's a dying art... 😢🤡
+
+### Deployment
+
+I had a couple of issues with deployment:
+
+- The routes file is a specific type and requires any exports to be typed as requests (e.g. GET and POST) and so I had to rename this to actions.ts
+
+- Vercel only allows a limit time for a function to run. This meant streaming responses were causing an error which prevented the response from generating on the page. To get around this, I followed the steps [here](https://github.com/vercel/ai-chatbot/issues/291) which meant adding two lines of code to `page.tsx`
+
+```
+export const runtime = "edge";
+export const preferredRegion = "home";
+```
