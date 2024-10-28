@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useChat } from "ai/react";
+import { generate } from "./api/chat/route";
+import { readStreamableValue } from "ai/rsc";
 
 export default function Chat() {
-  const { messages, append, isLoading } = useChat();
+  const [generation, setGeneration] = useState<string>("");
 
   const genres = [
     { emoji: "💼", value: "Work" },
@@ -94,25 +95,24 @@ export default function Chat() {
 
           <button
             className="bg-cyan-500 hover:bg-cyan-950 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-            disabled={isLoading || !state.genre || !state.tone}
-            onClick={() =>
-              append({
-                role: "user",
-                content: `Generate a ${state.genre} joke in a ${state.tone} tone`,
-              })
-            }
+            disabled={!state.genre || !state.tone}
+            onClick={async () => {
+              const { output } = await generate(
+                `Generate a ${state.genre} joke in a ${state.tone} tone`
+              );
+              setGeneration(() => "");
+              for await (const delta of readStreamableValue(output)) {
+                setGeneration(
+                  (currentGeneration) => `${currentGeneration}${delta}`
+                );
+              }
+            }}
           >
             Generate Joke
           </button>
 
-          <div
-            hidden={
-              messages.length === 0 ||
-              messages[messages.length - 1]?.content.startsWith("Generate")
-            }
-            className="bg-opacity-25 bg-gray-700 rounded-lg p-4"
-          >
-            {messages[messages.length - 1]?.content}
+          <div className="bg-opacity-25 bg-gray-700 rounded-lg p-4">
+            {generation}
           </div>
         </div>
       </div>

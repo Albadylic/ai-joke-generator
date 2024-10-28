@@ -1,25 +1,25 @@
-import OpenAI from "openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
+"use server";
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
+import { createStreamableValue } from "ai/rsc";
 
-const openai = new OpenAI();
+export async function generate(input: string) {
+  const stream = createStreamableValue();
 
-export const runtime = "edge";
+  (async () => {
+    const { textStream } = await streamText({
+      model: openai("gpt-4-turbo"),
+      prompt: `You are a professional stand-up comedian who has been hired to tell jokes that make people laugh. The jokes should be captivating, hilarious, and thought-provoking. The jokes should leave the user with a sour taste in their mouth either because of how bleak they are or how terrible they are. Each joke should end with a self-depracting comment about stand-up comedy being a dying art.
+      
+      ${input}`,
+    });
 
-export async function POST(req: Request) {
-  const { messages } = await req.json();
+    for await (const delta of textStream) {
+      stream.update(delta);
+    }
 
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    stream: true,
-    messages: [
-      {
-        role: "system",
-        content: `You are a professional stand-up comedian who has been hired to tell jokes that make people laugh. The jokes should be captivating, hilarious, and thought-provoking. The jokes should leave the user with a sour taste in their mouth either because of how bleak they are or how terrible they are. Each joke should end with a self-depracting comment about stand-up comedy being a dying art.`,
-      },
-      ...messages,
-    ],
-  });
+    stream.done();
+  })();
 
-  const stream = OpenAIStream(response);
-  return new StreamingTextResponse(stream);
+  return { output: stream.value };
 }
