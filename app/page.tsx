@@ -16,16 +16,23 @@ export default function Chat() {
     { emoji: "📺", value: "Television" },
     { emoji: "🚀", value: "Space Travel" },
   ];
+
   const tones = [
     { emoji: "😊", value: "Happy" },
     { emoji: "😈", value: "Dark" },
     { emoji: "😏", value: "Sarcastic" },
-    { emoji: "👨‍👧", value: "Dad jokes" },
+  ];
+
+  const types = [
+    { emoji: "🚪", value: "Knock, knock" },
+    { emoji: "👨‍👧", value: "Dad joke" },
+    { emoji: "🐕", value: "Shaggy dog story" },
   ];
 
   const [state, setState] = useState({
-    genre: "",
-    tone: "",
+    genre: genres[0].value,
+    tone: tones[0].value,
+    type: types[0].value,
   });
 
   const handleChange = ({
@@ -52,7 +59,7 @@ export default function Chat() {
             <h3 className="text-xl font-semibold">Genre</h3>
 
             <div className="flex flex-wrap justify-center">
-              {genres.map(({ value, emoji }) => (
+              {genres.map(({ value, emoji }, index) => (
                 <div
                   key={value}
                   className="p-4 m-2 bg-opacity-25 bg-gray-600 rounded-lg"
@@ -63,6 +70,7 @@ export default function Chat() {
                     value={value}
                     name="genre"
                     onChange={handleChange}
+                    defaultChecked={index == 0 ? true : false}
                   />
                   <label className="ml-2" htmlFor={value}>
                     {`${emoji} ${value}`}
@@ -76,7 +84,7 @@ export default function Chat() {
             <h3 className="text-xl font-semibold">Tones</h3>
 
             <div className="flex flex-wrap justify-center">
-              {tones.map(({ value, emoji }) => (
+              {tones.map(({ value, emoji }, index) => (
                 <div
                   key={value}
                   className="p-4 m-2 bg-opacity-25 bg-gray-600 rounded-lg"
@@ -87,6 +95,32 @@ export default function Chat() {
                     name="tone"
                     value={value}
                     onChange={handleChange}
+                    defaultChecked={index == 0 ? true : false}
+                  />
+                  <label className="ml-2" htmlFor={value}>
+                    {`${emoji} ${value}`}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-4 bg-opacity-25 bg-gray-200 rounded-lg p-4">
+            <h3 className="text-xl font-semibold">Type</h3>
+
+            <div className="flex flex-wrap justify-center">
+              {types.map(({ value, emoji }, index) => (
+                <div
+                  key={value}
+                  className="p-4 m-2 bg-opacity-25 bg-gray-600 rounded-lg"
+                >
+                  <input
+                    id={value}
+                    type="radio"
+                    name="type"
+                    value={value}
+                    onChange={handleChange}
+                    defaultChecked={index == 0 ? true : false}
                   />
                   <label className="ml-2" htmlFor={value}>
                     {`${emoji} ${value}`}
@@ -101,7 +135,7 @@ export default function Chat() {
             disabled={!state.genre || !state.tone}
             onClick={async () => {
               const { output } = await generate(
-                `Generate a ${state.genre} joke in a ${state.tone} tone`
+                `Generate a ${state.type} joke about ${state.genre} in a ${state.tone} tone`
               );
               setGeneration(() => "");
               for await (const delta of readStreamableValue(output)) {
